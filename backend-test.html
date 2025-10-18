@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Connection Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            background-color: #e9ecef;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Backend Connection Test</h1>
+        <p>This page tests the connection between the frontend and the Node.js backend with MongoDB.</p>
+        
+        <button onclick="testConnection()">Test Backend Connection</button>
+        <button onclick="getStudents()">Get Students Data</button>
+        
+        <div id="result" class="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        function showMessage(message, isSuccess) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = message;
+            resultDiv.className = 'result ' + (isSuccess ? 'success' : 'error');
+            resultDiv.style.display = 'block';
+        }
+
+        async function testConnection() {
+            try {
+                const response = await fetch('http://localhost:3000/');
+                const data = await response.text();
+                
+                if (response.ok) {
+                    showMessage(`Success: ${data}`, true);
+                } else {
+                    showMessage(`Error: ${data}`, false);
+                }
+            } catch (error) {
+                showMessage(`Connection failed: ${error.message}`, false);
+            }
+        }
+
+        async function getStudents() {
+            try {
+                const response = await fetch('http://localhost:3000/api/students');
+                const students = await response.json();
+                
+                if (response.ok) {
+                    let message = `<h3>Students Data:</h3>`;
+                    if (students.length === 0) {
+                        message += '<p>No students found in database.</p>';
+                    } else {
+                        students.forEach(student => {
+                            message += `
+                                <div style="margin: 10px 0; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                                    <strong>${student.name}</strong> (${student.email})<br>
+                                    Student ID: ${student.studentId}<br>
+                                    Grade: ${student.grade}
+                                </div>
+                            `;
+                        });
+                    }
+                    showMessage(message, true);
+                } else {
+                    showMessage(`Error: ${students.message}`, false);
+                }
+            } catch (error) {
+                showMessage(`Failed to fetch students: ${error.message}`, false);
+            }
+        }
+    </script>
+</body>
+</html>

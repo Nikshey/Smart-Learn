@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartLearn LMS - Modern Education Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Primary Colors */
+      --primary-gradient-start: #4e54c8;
+      --primary-gradient-end: #8f94fb;
+      --secondary-gradient-start: #11998e;
+      --secondary-gradient-end: #38ef7d;
+      --accent-gradient-start: #ff416c;
+      --accent-gradient-end: #ff4b2b;
+      
+      /* Background Colors */
+      --bg-dark: #0f172a;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --bg-overlay: rgba(15, 23, 42, 0.85);
+      
+      /* Text Colors */
+      --text-light: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-accent: #e2e8f0;
+      
+      /* Border Colors */
+      --border-light: rgba(255, 255, 255, 0.1);
+      --border-accent: rgba(147, 197, 253, 0.3);
+      
+      /* Shadows */
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.95)), url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: var(--text-light);
+      min-height: 100vh;
+    }
+    
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 5%;
+      background: var(--bg-overlay);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border-light);
+    }
+    
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--primary-gradient-start), var(--primary-gradient-end));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 30px;
+    }
+    
+    .nav-links a {
+      color: var(--text-light);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .nav-links a:hover {
+      color: var(--secondary-gradient-end);
+    }
+    
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -5px;
+      left: 0;
+      background: linear-gradient(90deg, var(--primary-gradient-start), var(--primary-gradient-end));
+      transition: width 0.3s ease;
+    }
+    
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+    
+    .auth-buttons {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .btn {
+      padding: 10px 25px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      border: none;
+      font-size: 0.9rem;
+    }
+    
+    .btn-login {
+      background: transparent;
+      color: var(--text-light);
+      border: 2px solid var(--text-light);
+    }
+    
+    .btn-login:hover {
+      background: var(--text-light);
+      color: var(--bg-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .btn-register {
+      background: linear-gradient(90deg, var(--accent-gradient-start), var(--accent-gradient-end));
+      color: white;
+      border: none;
+    }
+    
+    .btn-register:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 5%;
+      min-height: 80vh;
+    }
+    
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, var(--primary-gradient-start), var(--primary-gradient-end));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin-bottom: 30px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+    
+    .cta-buttons {
+      display: flex;
+      gap: 20px;
+      margin-top: 30px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(90deg, var(--accent-gradient-start), var(--accent-gradient-end));
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      font-size: 1.1rem;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-light);
+      border: 2px solid var(--text-light);
+      padding: 15px 40px;
+      font-size: 1.1rem;
+    }
+    
+    .btn-secondary:hover {
+      background: var(--text-light);
+      color: var(--bg-dark);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .features {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      padding: 50px 5%;
+      background: var(--bg-overlay);
+    }
+    
+    .feature-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 30px;
+      width: 300px;
+      text-align: center;
+      transition: transform 0.3s ease;
+      border: 1px solid var(--border-light);
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-10px);
+      border-color: var(--border-accent);
+    }
+    
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, var(--accent-gradient-start), var(--accent-gradient-end));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .feature-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
+    
+    .feature-card p {
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    
+    .footer {
+      text-align: center;
+      padding: 30px;
+      background: var(--bg-overlay);
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border-light);
+    }
+    
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .cta-buttons {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">SmartLearn</div>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="#">Features</a>
+      <a href="#">Courses</a>
+      <a href="#">About</a>
+    </div>
+    <div class="auth-buttons">
+      <a href="login.html" class="btn btn-login">Login</a>
+      <a href="register.html" class="btn btn-register">Register</a>
+    </div>
+  </nav>
+  
+  <section class="hero">
+    <h1>Transform Your Learning Experience</h1>
+    <p>SmartLearn is a cutting-edge Learning Management System designed to revolutionize education for students and teachers. Our AI-powered platform provides personalized learning paths, real-time collaboration, and comprehensive analytics to enhance educational outcomes.</p>
+    <div class="cta-buttons">
+      <a href="register.html" class="btn btn-primary">Get Started</a>
+      <a href="#features" class="btn btn-secondary">Learn More</a>
+    </div>
+  </section>
+  
+  <section id="features" class="features">
+    <div class="feature-card">
+      <div class="feature-icon">🎓</div>
+      <h3>Personalized Learning</h3>
+      <p>Adaptive learning paths tailored to each student's pace and learning style for optimal educational outcomes.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">👨‍🏫</div>
+      <h3>Teacher Dashboard</h3>
+      <p>Comprehensive tools for educators to track progress, create assignments, and engage with students effectively.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h3>AI-Powered Insights</h3>
+      <p>Advanced analytics and AI recommendations to identify learning gaps and improve performance.</p>
+    </div>
+  </section>
+  
+  <footer class="footer">
+    <p>&copy; 2025 SmartLearn LMS. All rights reserved. | Revolutionizing Education Through Technology</p>
+  </footer>
+
+  <script>
+    // Check if user is already logged in and redirect to appropriate dashboard
+    window.onload = function() {
+      if (localStorage.getItem('isLoggedIn') === 'true') {
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        if (userData && userData.role === 'teacher') {
+          window.location.href = 'teacher.html';
+        } else {
+          window.location.href = 'student.html';
+        }
+      }
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,2189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Dashboard | SmartLearn LMS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      /* Primary Colors */
+      --primary-gradient-start: #4e54c8;
+      --primary-gradient-end: #8f94fb;
+      --secondary-gradient-start: #11998e;
+      --secondary-gradient-end: #38ef7d;
+      --accent-gradient-start: #ff416c;
+      --accent-gradient-end: #ff4b2b;
+      --teacher-gradient-start: #ff9966;
+      --teacher-gradient-end: #ff5e62;
+      
+      /* Background Colors */
+      --bg-dark: #0f172a;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --bg-overlay: rgba(15, 23, 42, 0.85);
+      
+      /* Text Colors */
+      --text-light: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-accent: #e2e8f0;
+      
+      /* Border Colors */
+      --border-light: rgba(255, 255, 255, 0.1);
+      --border-accent: rgba(147, 197, 253, 0.3);
+      
+      /* Shadows */
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, var(--bg-dark), #1e293b);
+      color: var(--text-light);
+      min-height: 100vh;
+      background-attachment: fixed;
+    }
+    
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 5%;
+      background: var(--bg-overlay);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border-light);
+    }
+    
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--teacher-gradient-start), var(--teacher-gradient-end));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 30px;
+    }
+    
+    .nav-links a {
+      color: var(--text-light);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .nav-links a:hover {
+      color: var(--teacher-gradient-end);
+    }
+    
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -5px;
+      left: 0;
+      background: linear-gradient(90deg, var(--teacher-gradient-start), var(--teacher-gradient-end));
+      transition: width 0.3s ease;
+    }
+    
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .user-info span {
+      font-weight: 500;
+    }
+    
+    .btn {
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      border: none;
+      font-size: 0.9rem;
+    }
+    
+    .btn-logout {
+      background: linear-gradient(90deg, var(--accent-gradient-start), var(--accent-gradient-end));
+      color: white;
+    }
+    
+    .btn-logout:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .container {
+      display: flex;
+      padding: 20px;
+      gap: 20px;
+    }
+    
+    .sidebar {
+      width: 250px;
+      background: var(--bg-card);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      height: fit-content;
+      border: 1px solid var(--border-light);
+    }
+    
+    .sidebar h3 {
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--teacher-gradient-end);
+    }
+    
+    .sidebar-menu {
+      list-style: none;
+    }
+    
+    .sidebar-menu li {
+      margin-bottom: 15px;
+    }
+    
+    .sidebar-menu a {
+      color: var(--text-light);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .sidebar-menu a:hover, .sidebar-menu a.active {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .main-content {
+      flex: 1;
+    }
+    
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    
+    .dashboard-header h1 {
+      font-size: 2rem;
+      background: linear-gradient(90deg, var(--teacher-gradient-start), var(--teacher-gradient-end));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 25px;
+      transition: transform 0.3s ease;
+      border: 1px solid var(--border-light);
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: var(--border-accent);
+    }
+    
+    .card h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+    
+    .card h3 i {
+      background: linear-gradient(90deg, var(--teacher-gradient-start), var(--teacher-gradient-end));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 2px solid var(--border-light);
+      background: rgba(0, 0, 0, 0.3);
+      color: var(--text-light);
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      border-color: var(--teacher-gradient-end);
+      box-shadow: 0 0 0 3px rgba(255, 94, 98, 0.3);
+    }
+    
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(90deg, var(--teacher-gradient-start), var(--teacher-gradient-end));
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-light);
+      border: 1px solid var(--border-light);
+      padding: 12px 25px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .section {
+      background: var(--bg-card);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 30px;
+      display: none;
+      border: 1px solid var(--border-light);
+    }
+    
+    .section.active {
+      display: block;
+    }
+    
+    .section h2 {
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .section h2 i {
+      background: linear-gradient(90deg, var(--teacher-gradient-start), var(--teacher-gradient-end));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    
+    table th, table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-light);
+    }
+    
+    table th {
+      background: rgba(255, 255, 255, 0.1);
+      font-weight: 600;
+    }
+    
+    table tr:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .assignment-status {
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    
+    .status-pending {
+      background: rgba(255, 193, 7, 0.2);
+      color: #ffc107;
+      border: 1px solid rgba(255, 193, 7, 0.3);
+    }
+    
+    .status-submitted {
+      background: rgba(40, 167, 69, 0.2);
+      color: #28a745;
+      border: 1px solid rgba(40, 167, 69, 0.3);
+    }
+    
+    .status-graded {
+      background: rgba(0, 123, 255, 0.2);
+      color: #007bff;
+      border: 1px solid rgba(0, 123, 255, 0.3);
+    }
+    
+    .grade-input {
+      width: 80px;
+      padding: 5px;
+      border-radius: 5px;
+      border: 1px solid var(--border-light);
+      background: rgba(0, 0, 0, 0.3);
+      color: var(--text-light);
+    }
+    
+    .material-link {
+      color: var(--teacher-gradient-end);
+      text-decoration: none;
+    }
+    
+    .material-link:hover {
+      text-decoration: underline;
+    }
+    
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 25px;
+      margin-top: 20px;
+    }
+    
+    .course-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 25px;
+      transition: transform 0.3s ease;
+      border: 1px solid var(--border-light);
+    }
+    
+    .course-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--border-accent);
+    }
+    
+    .course-card h3 {
+      margin-bottom: 15px;
+      color: var(--teacher-gradient-end);
+    }
+    
+    .course-card p {
+      margin-bottom: 15px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+    
+    .course-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .material-form {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    
+    .course-materials {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    
+    .course-materials table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .course-materials th,
+    .course-materials td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-light);
+    }
+    
+    .course-materials th {
+      background: rgba(255, 255, 255, 0.1);
+      font-weight: 600;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+      }
+      
+      .card-container {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        width: 100%;
+      }
+      
+      .card-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">SmartLearn</div>
+    <div class="nav-links">
+      <a href="#" class="active">Dashboard</a>
+      <a href="#">Courses</a>
+      <a href="#">Students</a>
+      <a href="#">Analytics</a>
+    </div>
+    <div class="user-info">
+      <span id="teacherName">Welcome, Teacher</span>
+      <button class="btn btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+  
+  <div class="container">
+    <div class="sidebar">
+      <h3>Teacher Panel</h3>
+      <ul class="sidebar-menu">
+        <li><a href="#" class="active" onclick="showSection('dashboard')"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="#" onclick="showSection('courses')"><i class="fas fa-book"></i> Create Course</a></li>
+        <li><a href="#" onclick="showSection('my-courses')"><i class="fas fa-list"></i> My Courses</a></li>
+        <li><a href="#" onclick="showSection('assignments')"><i class="fas fa-tasks"></i> Create Assignment</a></li>
+        <li><a href="#" onclick="showSection('enrolled')"><i class="fas fa-users"></i> Enrolled Students</a></li>
+        <li><a href="#" onclick="showSection('grading')"><i class="fas fa-graduation-cap"></i> Grade Assignments</a></li>
+        <li><a href="#" onclick="showSection('materials')"><i class="fas fa-file-upload"></i> Upload Materials</a></li>
+      </ul>
+    </div>
+    
+    <div class="main-content">
+      <!-- Dashboard Section -->
+      <div id="dashboard" class="section active">
+        <div class="dashboard-header">
+          <h1><i class="fas fa-chalkboard-teacher"></i> Teacher Dashboard</h1>
+        </div>
+        
+        <div class="card-container">
+          <div class="card">
+            <h3><i class="fas fa-book"></i> Courses</h3>
+            <p>You have <strong id="courseCount">0</strong> active courses</p>
+            <button class="btn-primary" onclick="showSection('courses')">Create New Course</button>
+          </div>
+          
+          <div class="card">
+            <h3><i class="fas fa-tasks"></i> Assignments</h3>
+            <p>You have <strong id="assignmentCount">0</strong> active assignments</p>
+            <button class="btn-primary" onclick="showSection('assignments')">Create Assignment</button>
+          </div>
+          
+          <div class="card">
+            <h3><i class="fas fa-users"></i> Students</h3>
+            <p><strong id="studentCount">0</strong> students enrolled in your courses</p>
+            <button class="btn-primary" onclick="showSection('enrolled')">View Students</button>
+          </div>
+        </div>
+        
+        <div class="section">
+          <h2><i class="fas fa-chart-bar"></i> Recent Activity</h2>
+          <p>Here you would see recent activity in your courses.</p>
+        </div>
+      </div>
+      
+      <!-- Create Course Section -->
+      <div id="courses" class="section">
+        <h2><i class="fas fa-book"></i> Create New Course</h2>
+        <form id="courseForm">
+          <div class="form-group">
+            <label for="courseName">Course Name</label>
+            <input type="text" id="courseName" placeholder="Enter course name" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="courseCode">Course Code</label>
+            <input type="text" id="courseCode" placeholder="Enter course code" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="courseDescription">Course Description</label>
+            <textarea id="courseDescription" placeholder="Enter course description" required></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="courseDuration">Duration</label>
+            <select id="courseDuration" required>
+              <option value="">Select duration</option>
+              <option value="4 weeks">4 Weeks</option>
+              <option value="8 weeks">8 Weeks</option>
+              <option value="12 weeks">12 Weeks</option>
+              <option value="16 weeks">16 Weeks</option>
+            </select>
+          </div>
+          
+          <button type="submit" class="btn-primary">Create Course</button>
+        </form>
+      </div>
+      
+      <!-- My Courses Section -->
+      <div id="my-courses" class="section">
+        <h2><i class="fas fa-book"></i> My Courses</h2>
+        <div id="coursesList">
+          <!-- Courses will be populated here dynamically -->
+        </div>
+        
+        <!-- Enrolled Students Section within My Courses -->
+        <div id="enrolledStudentsInCourses" style="margin-top: 30px;">
+          <h3><i class="fas fa-users"></i> Students Enrolled in Your Courses</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Course</th>
+                <th>Enrollment Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Data will be populated dynamically by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Create Assignment Section -->
+      <div id="assignments" class="section">
+        <h2><i class="fas fa-tasks"></i> Create New Assignment</h2>
+        <form id="assignmentForm">
+          <div class="form-group">
+            <label for="assignmentTitle">Assignment Title</label>
+            <input type="text" id="assignmentTitle" placeholder="Enter assignment title" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="assignmentCourse">Select Course</label>
+            <select id="assignmentCourse" required>
+              <option value="">Select a course</option>
+              <!-- Options will be populated dynamically -->
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="assignmentDescription">Assignment Description</label>
+            <textarea id="assignmentDescription" placeholder="Enter assignment description" required></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="assignmentDueDate">Due Date</label>
+            <input type="date" id="assignmentDueDate" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="assignmentPoints">Total Points</label>
+            <input type="number" id="assignmentPoints" placeholder="Enter total points" min="1" required>
+          </div>
+          
+          <!-- Questions Section -->
+          <div class="form-group">
+            <label>Questions</label>
+            <div id="questionsContainer">
+              <!-- Questions will be added here dynamically -->
+            </div>
+            <button type="button" class="btn-secondary" onclick="addQuestion()">Add Question</button>
+          </div>
+          
+          <button type="submit" class="btn-primary">Create Assignment</button>
+        </form>
+      </div>
+      
+      <!-- Enrolled Students Section -->
+      <div id="enrolled" class="section">
+        <h2><i class="fas fa-users"></i> Enrolled Students</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Student ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Course</th>
+              <th>Enrollment Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data will be populated dynamically by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Grade Assignments Section -->
+      <div id="grading" class="section">
+        <h2><i class="fas fa-graduation-cap"></i> Grade Assignments</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Assignment</th>
+              <th>Submission Date</th>
+              <th>Status</th>
+              <th>Grade</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data will be populated dynamically by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Upload Materials Section -->
+      <div id="materials" class="section">
+        <h2><i class="fas fa-file-upload"></i> Upload Course Materials</h2>
+        <form id="materialForm">
+          <div class="form-group">
+            <label for="materialTitle">Material Title</label>
+            <input type="text" id="materialTitle" placeholder="Enter material title" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="materialCourse">Select Course</label>
+            <select id="materialCourse" required>
+              <option value="">Select a course</option>
+              <!-- Options will be populated dynamically -->
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="materialType">Material Type</label>
+            <select id="materialType" required>
+              <option value="">Select material type</option>
+              <option value="video">Video</option>
+              <option value="document">Document (PDF)</option>
+              <option value="presentation">Presentation (PPT)</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="materialDescription">Description</label>
+            <textarea id="materialDescription" placeholder="Enter material description"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="materialUrl">Video URL (for videos)</label>
+            <input type="url" id="materialUrl" placeholder="Enter video URL (e.g., YouTube link)">
+          </div>
+          
+          <button type="submit" class="btn-primary">Upload Material</button>
+        </form>
+        
+        <div style="margin-top: 30px;">
+          <h3>Uploaded Materials</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Course</th>
+                <th>Type</th>
+                <th>Upload Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Data will be populated dynamically by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Function to handle logout
+    function logout() {
+      localStorage.removeItem('isLoggedIn');
+      window.location.href = 'index.html';
+    }
+    
+    // Function to show specific section
+    function showSection(sectionId) {
+      // Hide all sections
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      // Show selected section
+      document.getElementById(sectionId).classList.add('active');
+      
+      // Update active menu item
+      const menuItems = document.querySelectorAll('.sidebar-menu a');
+      menuItems.forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      // Add active class to clicked menu item
+      event.target.classList.add('active');
+      
+      // If showing "my-courses" section, refresh the course list
+      if (sectionId === 'my-courses') {
+        displayMyCourses();
+      }
+      
+      // If showing other sections, refresh their data
+      if (sectionId === 'dashboard') {
+        updateDashboardCounts();
+      } else if (sectionId === 'enrolled') {
+        displayEnrolledStudents();
+      } else if (sectionId === 'materials') {
+        displayUploadedMaterials();
+      } else if (sectionId === 'grading') {
+        displaySubmissionsForGrading();
+      }
+    }
+    
+    // Form submission handlers
+    document.getElementById('courseForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Get form values
+      const courseName = document.getElementById('courseName').value;
+      const courseCode = document.getElementById('courseCode').value;
+      const courseDescription = document.getElementById('courseDescription').value;
+      const courseDuration = document.getElementById('courseDuration').value;
+      
+      // Get teacher info from localStorage
+      const userData = JSON.parse(localStorage.getItem('userData'));
+      const instructorName = userData && userData.fullName ? userData.fullName : 'Unknown Teacher';
+      const instructorId = userData && userData.email ? userData.email : 'unknown';
+      
+      // Create course object
+      const courseData = {
+        name: courseName,
+        code: courseCode,
+        description: courseDescription,
+        duration: courseDuration,
+        instructor: instructorName,
+        instructorId: instructorId
+      };
+      
+      // Send to backend
+      fetch('http://localhost:3000/api/courses', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(courseData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Course created:', data);
+        alert('Course created successfully!');
+        
+        // Update UI
+        updateDashboardCounts();
+        populateCourseDropdowns();
+        
+        // Reset form
+        this.reset();
+      })
+      .catch(error => {
+        console.error('Error creating course:', error);
+        alert('Error creating course: ' + error.message);
+      });
+    });
+    
+    document.getElementById('assignmentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Get form values
+      const assignmentTitle = document.getElementById('assignmentTitle').value;
+      const assignmentCourse = document.getElementById('assignmentCourse').value;
+      const assignmentDescription = document.getElementById('assignmentDescription').value;
+      const assignmentDueDate = document.getElementById('assignmentDueDate').value;
+      const assignmentPoints = document.getElementById('assignmentPoints').value;
+      
+      // Validate required fields
+      if (!assignmentTitle || !assignmentCourse || !assignmentDescription || !assignmentDueDate || !assignmentPoints) {
+        alert('Please fill in all required fields');
+        return;
+      }
+      
+      // Get questions
+      const questions = getQuestionsData();
+      
+      // Validate that at least one question is added
+      if (questions.length === 0) {
+        alert('Please add at least one question');
+        return;
+      }
+      
+      // Get teacher info from localStorage
+      const userData = JSON.parse(localStorage.getItem('userData'));
+      const instructorName = userData && userData.fullName ? userData.fullName : 'Unknown Teacher';
+      const instructorId = userData && userData.email ? userData.email : 'unknown';
+      
+      // Create assignment data
+      const assignmentData = {
+        title: assignmentTitle,
+        courseId: assignmentCourse,
+        description: assignmentDescription,
+        dueDate: assignmentDueDate,
+        points: parseInt(assignmentPoints),
+        questions: questions,
+        createdBy: instructorName,
+        createdById: instructorId
+      };
+      
+      // Send to backend
+      fetch('http://localhost:3000/api/assignments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(assignmentData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Assignment created:', data);
+        alert('Assignment created successfully!');
+        
+        // Update UI
+        updateDashboardCounts();
+        
+        // Reset form
+        this.reset();
+        document.getElementById('questionsContainer').innerHTML = '';
+      })
+      .catch(error => {
+        console.error('Error creating assignment:', error);
+        alert('Error creating assignment: ' + error.message);
+      });
+    });
+    
+    document.getElementById('materialForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Get form values
+      const materialTitle = document.getElementById('materialTitle').value;
+      const materialCourse = document.getElementById('materialCourse').value;
+      const materialType = document.getElementById('materialType').value;
+      const materialDescription = document.getElementById('materialDescription').value;
+      const materialUrl = document.getElementById('materialUrl').value;
+      
+      // Validate required fields
+      if (!materialTitle || !materialCourse || !materialType) {
+        alert('Please fill in all required fields');
+        return;
+      }
+      
+      // For videos, URL is required
+      if (materialType === 'video' && !materialUrl) {
+        alert('Please enter a video URL for video materials');
+        return;
+      }
+      
+      // Get teacher info from localStorage
+      const userData = JSON.parse(localStorage.getItem('userData'));
+      const instructorName = userData && userData.fullName ? userData.fullName : 'Unknown Teacher';
+      const instructorId = userData && userData.email ? userData.email : 'unknown';
+      
+      // Create material data
+      const materialData = {
+        title: materialTitle,
+        courseId: materialCourse,
+        type: materialType,
+        description: materialDescription,
+        fileUrl: materialUrl,
+        uploadedBy: instructorName,
+        uploadedById: instructorId
+      };
+      
+      // Send to backend
+      fetch('http://localhost:3000/api/materials', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(materialData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Material uploaded:', data);
+        alert('Material uploaded successfully!');
+        
+        // Update UI
+        displayUploadedMaterials();
+        
+        // Reset form
+        this.reset();
+      })
+      .catch(error => {
+        console.error('Error uploading material:', error);
+        alert('Error uploading material: ' + error.message);
+      });
+    });
+    
+    // Function to add a new question
+    function addQuestion() {
+      const questionsContainer = document.getElementById('questionsContainer');
+      const questionCount = questionsContainer.children.length + 1;
+      
+      const questionDiv = document.createElement('div');
+      questionDiv.className = 'question-item';
+      questionDiv.innerHTML = `
+        <div style="background: rgba(0, 0, 0, 0.2); border-radius: 10px; padding: 15px; margin-bottom: 15px;">
+          <div class="form-group">
+            <label>Question ${questionCount}</label>
+            <textarea class="question-text" placeholder="Enter question text" required style="min-height: 80px;"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label>Question Type</label>
+            <select class="question-type" onchange="updateQuestionOptions(this)">
+              <option value="short-answer">Short Answer</option>
+              <option value="long-answer">Long Answer</option>
+              <option value="multiple-choice">Multiple Choice</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label>Points</label>
+            <input type="number" class="question-points" placeholder="Points" min="1" value="1" required>
+          </div>
+          
+          <div class="options-container" style="display: none;">
+            <label>Options</label>
+            <div class="options-list">
+              <!-- Options will be added here dynamically -->
+            </div>
+            <button type="button" class="btn-secondary" onclick="addOption(this)">Add Option</button>
+          </div>
+          
+          <button type="button" class="btn-secondary" onclick="removeQuestion(this)" style="background: #ff4b2b;">Remove Question</button>
+        </div>
+      `;
+      
+      questionsContainer.appendChild(questionDiv);
+    }
+    
+    // Function to update question options based on type
+    function updateQuestionOptions(selectElement) {
+      const questionDiv = selectElement.closest('.question-item');
+      const optionsContainer = questionDiv.querySelector('.options-container');
+      
+      if (selectElement.value === 'multiple-choice') {
+        optionsContainer.style.display = 'block';
+      } else {
+        optionsContainer.style.display = 'none';
+      }
+    }
+    
+    // Function to add an option to a multiple-choice question
+    function addOption(buttonElement) {
+      const optionsList = buttonElement.previousElementSibling;
+      const optionCount = optionsList.children.length + 1;
+      
+      const optionDiv = document.createElement('div');
+      optionDiv.style.display = 'flex';
+      optionDiv.style.alignItems = 'center';
+      optionDiv.style.marginBottom = '10px';
+      optionDiv.innerHTML = `
+        <input type="text" placeholder="Option ${optionCount}" style="flex: 1; margin-right: 10px;" required>
+        <label style="margin-right: 10px;">
+          <input type="checkbox" class="correct-option"> Correct
+        </label>
+        <button type="button" onclick="removeOption(this)" style="background: #ff4b2b; border: none; padding: 5px 10px; border-radius: 5px; color: white; cursor: pointer;">Remove</button>
+      `;
+      
+      optionsList.appendChild(optionDiv);
+    }
+    
+    // Function to remove an option
+    function removeOption(buttonElement) {
+      buttonElement.closest('div').remove();
+    }
+    
+    // Function to remove a question
+    function removeQuestion(buttonElement) {
+      buttonElement.closest('.question-item').remove();
+    }
+    
+    // Function to get questions data from the form
+    function getQuestionsData() {
+      const questions = [];
+      const questionItems = document.querySelectorAll('.question-item');
+      
+      questionItems.forEach((item, index) => {
+        const questionText = item.querySelector('.question-text').value;
+        const questionType = item.querySelector('.question-type').value;
+        const questionPoints = parseInt(item.querySelector('.question-points').value) || 1;
+        
+        if (questionText.trim() !== '') {
+          const question = {
+            questionText: questionText,
+            questionType: questionType,
+            points: questionPoints
+          };
+          
+          if (questionType === 'multiple-choice') {
+            const options = [];
+            const optionElements = item.querySelectorAll('.options-list > div');
+            
+            optionElements.forEach(optionDiv => {
+              const optionText = optionDiv.querySelector('input[type="text"]').value;
+              const isCorrect = optionDiv.querySelector('.correct-option').checked;
+              
+              if (optionText.trim() !== '') {
+                options.push({
+                  text: optionText,
+                  isCorrect: isCorrect
+                });
+              }
+            });
+            
+            question.options = options;
+          }
+          
+          questions.push(question);
+        }
+      });
+      
+      return questions;
+    }
+    
+    // Function to display teacher's courses in the "My Courses" section
+    function displayMyCourses() {
+      // Get teacher info from localStorage
+      const userData = JSON.parse(localStorage.getItem('userData'));
+      const instructorId = userData && userData.email ? userData.email : 'unknown';
+      
+      // Fetch courses from backend
+      fetch(`http://localhost:3000/api/courses/instructor/${instructorId}`)
+        .then(response => response.json())
+        .then(courses => {
+          const coursesListContainer = document.getElementById('coursesList');
+          
+          if (courses.length > 0) {
+            let coursesHTML = '<div class="course-grid">';
+            courses.forEach(course => {
+              coursesHTML += `
+                <div class="course-card">
+                  <h3>${course.name} (${course.code})</h3>
+                  <p><strong>Duration:</strong> ${course.duration}</p>
+                  <p>${course.description}</p>
+                  <div class="course-actions">
+                    <button class="btn-primary" onclick="showUploadMaterialForm('${course._id}')">Upload Video/Material</button>
+                    <button class="btn-secondary" onclick="showCourseMaterials('${course._id}')">View Materials</button>
+                  </div>
+                  <div id="materialForm-${course._id}" class="material-form" style="display: none; margin-top: 20px;">
+                    <h4>Upload Material for ${course.name}</h4>
+                    <form id="materialForm-${course._id}-form" onsubmit="uploadMaterial(event, '${course._id}')">
+                      <div class="form-group">
+                        <label for="materialTitle-${course._id}">Material Title</label>
+                        <input type="text" id="materialTitle-${course._id}" placeholder="Enter material title" required>
+                      </div>
+                      
+                      <div class="form-group">
+                        <label for="materialType-${course._id}">Material Type</label>
+                        <select id="materialType-${course._id}" required>
+                          <option value="">Select material type</option>
+                          <option value="video">Video</option>
+                          <option value="document">Document (PDF)</option>
+                          <option value="presentation">Presentation (PPT)</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </div>
+                      
+                      <div class="form-group">
+                        <label for="materialDescription-${course._id}">Description</label>
+                        <textarea id="materialDescription-${course._id}" placeholder="Enter material description"></textarea>
+                      </div>
+                      
+                      <div class="form-group">
+                        <label for="materialUrl-${course._id}">Video URL (for videos)</label>
+                        <input type="url" id="materialUrl-${course._id}" placeholder="Enter video URL (e.g., YouTube link)">
+                      </div>
+                      
+                      <button type="submit" class="btn-primary">Upload Material</button>
+                      <button type="button" class="btn-secondary" onclick="hideUploadMaterialForm('${course._id}')">Cancel</button>
+                    </form>
+                  </div>
+                  <div id="courseMaterials-${course._id}" class="course-materials" style="display: none; margin-top: 20px;">
+                    <h4>Materials for ${course.name}</h4>
+                    <div id="materialsList-${course._id}">Loading materials...</div>
+                  </div>
+                </div>
+              `;
+            });
+            coursesHTML += '</div>';
+            coursesListContainer.innerHTML = coursesHTML;
+          } else {
+            coursesListContainer.innerHTML = `
+              <p>You haven't created any courses yet. <a href="#" onclick="showSection('courses')">Create your first course</a></p>
+            `;
+          }
+          
+          // After displaying courses, also display enrolled students
+          displayEnrolledStudentsInCourses(courses);
+        })
+        .catch(error => {
+          console.error('Error fetching courses:', error);
+          const coursesListContainer = document.getElementById('coursesList');
+          coursesListContainer.innerHTML = `
+            <p>Error loading courses. Please try again later.</p>
+          `;
+          
+          // Also show error in enrolled students section
+          const enrolledStudentsContainer = document.querySelector('#enrolledStudentsInCourses tbody');
+          enrolledStudentsContainer.innerHTML = `
+            <tr>
+              <td colspan="5" style="text-align: center; padding: 20px;">Error loading student enrollments. Please try again later.</td>
+            </tr>
+          `;
+        });
+    }
+    
+    // Function to display enrolled students in courses (for My Courses section)
+    function displayEnrolledStudentsInCourses(courses) {
+      if (courses.length === 0) {
+        const enrolledStudentsContainer = document.querySelector('#enrolledStudentsInCourses tbody');
+        enrolledStudentsContainer.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align: center; padding: 20px;">No courses created yet</td>
+          </tr>
+        `;
+        return;
+      }
+      
+      // Get enrollments for each course
+      const courseIds = courses.map(course => course._id);
+      const enrollmentPromises = courseIds.map(courseId => 
+        fetch(`http://localhost:3000/api/enrollments/course/${courseId}`)
+          .then(response => response.json())
+      );
+      
+      Promise.all(enrollmentPromises)
+        .then(enrollmentResults => {
+          // Flatten the enrollment arrays
+          const allEnrollments = enrollmentResults.flat();
+          
+          if (allEnrollments.length === 0) {
+            const enrolledStudentsContainer = document.querySelector('#enrolledStudentsInCourses tbody');
+            enrolledStudentsContainer.innerHTML = `
+              <tr>
+                <td colspan="5" style="text-align: center; padding: 20px;">No students enrolled in your courses yet</td>
+              </tr>
+            `;
+            return;
+          }
+          
+          // Get unique student emails (studentId in enrollment is the email)
+          const studentEmails = [...new Set(allEnrollments.map(enrollment => enrollment.studentId))];
+          
+          // Fetch course details for mapping
+          const courseMap = {};
+          courses.forEach(course => {
+            courseMap[course._id] = course.name || course.code || course._id.substring(0, 8);
+          });
+          
+          // Fetch student details by email
+          const studentPromises = studentEmails.map(email => 
+            fetch(`http://localhost:3000/api/students/email/${email}`)
+              .then(response => {
+                if (!response.ok) {
+                  // If student not found by email, create a minimal student object
+                  return { name: 'Unknown Student', email: email, studentId: email.substring(0, 8) };
+                }
+                return response.json();
+              })
+              .catch(() => ({ name: 'Unknown Student', email: email, studentId: email.substring(0, 8) }))
+          );
+          
+          Promise.all(studentPromises)
+            .then(studentResults => {
+              // Create a map of student email to student details
+              const studentMap = {};
+              studentResults.forEach(student => {
+                studentMap[student.email] = student;
+              });
+              
+              const enrolledStudentsContainer = document.querySelector('#enrolledStudentsInCourses tbody');
+              let studentRows = '';
+              
+              allEnrollments.forEach(enrollment => {
+                const student = studentMap[enrollment.studentId] || { 
+                  name: 'Unknown Student', 
+                  email: enrollment.studentId,
+                  studentId: enrollment.studentId.substring(0, 8)
+                };
+                
+                const courseName = courseMap[enrollment.courseId] || enrollment.courseId.substring(0, 8);
+                
+                studentRows += `
+                  <tr>
+                    <td>${student.studentId || student.email.substring(0, 8)}</td>
+                    <td>${student.name}</td>
+                    <td>${student.email}</td>
+                    <td>${courseName}</td>
+                    <td>${new Date(enrollment.enrolledAt).toLocaleDateString()}</td>
+                  </tr>
+                `;
+              });
+              
+              enrolledStudentsContainer.innerHTML = studentRows;
+            })
+            .catch(error => {
+              console.error('Error fetching student details:', error);
+              const enrolledStudentsContainer = document.querySelector('#enrolledStudentsInCourses tbody');
+              enrolledStudentsContainer.innerHTML = `
+                <tr>
+                  <td colspan="5" style="text-align: center; padding: 20px;">Error loading student details. Please try again later.</td>
+                </tr>
+              `;
+            });
+        })
+        .catch(error => {
+          console.error('Error fetching enrollments:', error);
+          const enrolledStudentsContainer = document.querySelector('#enrolledStudentsInCourses tbody');
+          enrolledStudentsContainer.innerHTML = `
+            <tr>
+              <td colspan="5" style="text-align: center; padding: 20px;">Error loading student enrollments. Please try again later.</td>
+            </tr>
+          `;
+        });
+    }
+    
+    // Function to show the upload material form for a specific course
+    function showUploadMaterialForm(courseId) {
+      // Hide all material forms and materials lists
+      const allForms = document.querySelectorAll('.material-form');
+      const allMaterials = document.querySelectorAll('.course-materials');
+      allForms.forEach(form => form.style.display = 'none');
+      allMaterials.forEach(material => material.style.display = 'none');
+      
+      // Show the form for this course
+      const form = document.getElementById(`materialForm-${courseId}`);
+      if (form) {
+        form.style.display = 'block';
+      }
+    }
+    
+    // Function to hide the upload material form for a specific course
+    function hideUploadMaterialForm(courseId) {
+      const form = document.getElementById(`materialForm-${courseId}`);
+      if (form) {
+        form.style.display = 'none';
+      }
+    }
+    
+    // Function to show course materials
+    function showCourseMaterials(courseId) {
+      // Hide all material forms and materials lists
+      const allForms = document.querySelectorAll('.material-form');
+      const allMaterials = document.querySelectorAll('.course-materials');
+      allForms.forEach(form => form.style.display = 'none');
+      allMaterials.forEach(material => material.style.display = 'none');
+      
+      // Show the materials list for this course
+      const materialsDiv = document.getElementById(`courseMaterials-${courseId}`);
+      if (materialsDiv) {
+        materialsDiv.style.display = 'block';
+        loadCourseMaterials(courseId);
+      }
+    }
+    
+    // Function to load and display course materials
+    function loadCourseMaterials(courseId) {
+      const materialsListContainer = document.getElementById(`materialsList-${courseId}`);
+      if (!materialsListContainer) return;
+      
+      materialsListContainer.innerHTML = 'Loading materials...';
+      
+      fetch(`http://localhost:3000/api/materials/course/${courseId}`)
+        .then(response => response.json())
+        .then(materials => {
+          if (materials.length > 0) {
+            let materialsHTML = '<table style="width: 100%; border-collapse: collapse;">';
+            materialsHTML += `
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Type</th>
+                  <th>Upload Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+            `;
+            
+            materials.forEach(material => {
+              let typeDisplay = material.type.charAt(0).toUpperCase() + material.type.slice(1);
+              let actionButton = '';
+              
+              if (material.type === 'video' && material.fileUrl) {
+                actionButton = `<a href="${material.fileUrl}" target="_blank" class="material-link">Watch Video</a>`;
+              } else if (material.fileUrl) {
+                actionButton = `<a href="${material.fileUrl}" target="_blank" class="material-link">Download</a>`;
+              } else {
+                actionButton = `<span class="material-link">No file</span>`;
+              }
+              
+              materialsHTML += `
+                <tr>
+                  <td>${material.title}</td>
+                  <td>${typeDisplay}</td>
+                  <td>${new Date(material.uploadedAt).toLocaleDateString()}</td>
+                  <td>${actionButton}</td>
+                </tr>
+              `;
+            });
+            
+            materialsHTML += `
+              </tbody>
+              </table>
+            `;
+            materialsListContainer.innerHTML = materialsHTML;
+          } else {
+            materialsListContainer.innerHTML = '<p>No materials uploaded for this course yet.</p>';
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching materials:', error);
+          materialsListContainer.innerHTML = '<p>Error loading materials. Please try again later.</p>';
+        });
+    }
+    
+    // Function to upload material for a specific course
+    function uploadMaterial(event, courseId) {
+      event.preventDefault();
+      
+      // Get form values
+      const materialTitle = document.getElementById(`materialTitle-${courseId}`).value;
+      const materialType = document.getElementById(`materialType-${courseId}`).value;
+      const materialDescription = document.getElementById(`materialDescription-${courseId}`).value;
+      const materialUrl = document.getElementById(`materialUrl-${courseId}`).value;
+      
+      // Validate required fields
+      if (!materialTitle || !materialType) {
+        alert('Please fill in all required fields');
+        return;
+      }
+      
+      // For videos, URL is required
+      if (materialType === 'video' && !materialUrl) {
+        alert('Please enter a video URL for video materials');
+        return;
+      }
+      
+      // Get teacher info from localStorage
+      const userData = JSON.parse(localStorage.getItem('userData'));
+      const instructorName = userData && userData.fullName ? userData.fullName : 'Unknown Teacher';
+      const instructorId = userData && userData.email ? userData.email : 'unknown';
+      
+      // Create material data
+      const materialData = {
+        title: materialTitle,
+        courseId: courseId,
+        type: materialType,
+        description: materialDescription,
+        fileUrl: materialUrl,
+        uploadedBy: instructorName,
+        uploadedById: instructorId
+      };
+      
+      // Send to backend
+      fetch('http://localhost:3000/api/materials', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(materialData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Material uploaded:', data);
+        alert('Material uploaded successfully!');
+        
+        // Reset form
+        document.getElementById(`materialForm-${courseId}-form`).reset();
+        
+        // Hide the form
+        hideUploadMaterialForm(courseId);
+        
+        // Refresh the materials list
+        loadCourseMaterials(courseId);
+      })
+      .catch(error => {
+        console.error('Error uploading material:', error);
+        alert('Error uploading material: ' + error.message);
+      });
+    }
+    
+    // Function to update dashboard counts
+    function updateDashboardCounts() {
+      // Get teacher info from localStorage
+      const userData = JSON.parse(localStorage.getItem('userData'));
+      const instructorId = userData && userData.email ? userData.email : 'unknown';
+      
+      // Update course count
+      fetch(`http://localhost:3000/api/courses/instructor/${instructorId}`)
+        .then(response => response.json())
+        .then(courses => {
+          document.getElementById('courseCount').textContent = courses.length;
+        })
+        .catch(error => {
+          console.error('Error fetching courses:', error);
+          document.getElementById('courseCount').textContent = '0';
+        });
+      
+      // Update student count
+      fetch(`http://localhost:3000/api/courses/instructor/${instructorId}`)
+        .then(response => response.json())
+        .then(courses => {
+          if (courses.length === 0) {
+            document.getElementById('studentCount').textContent = '0';
+            return;
+          }
+          
+          // Get enrollments for each course
+          const courseIds = courses.map(course => course._id);
+          const enrollmentPromises = courseIds.map(courseId => 
+            fetch(`http://localhost:3000/api/enrollments/course/${courseId}`)
+              .then(response => response.json())
+          );
+          
+          Promise.all(enrollmentPromises)
+            .then(enrollmentResults => {
+              // Flatten the enrollment arrays
+              const allEnrollments = enrollmentResults.flat();
+              document.getElementById('studentCount').textContent = allEnrollments.length;
+            })
+            .catch(error => {
+              console.error('Error fetching enrollments:', error);
+              document.getElementById('studentCount').textContent = '0';
+            });
+        })
+        .catch(error => {
+          console.error('Error fetching courses:', error);
+          document.getElementById('studentCount').textContent = '0';
+        });
+      
+      // Update assignment count (placeholder)
+      document.getElementById('assignmentCount').textContent = '0';
+    }
+    
+    // Function to display enrolled students
+    function displayEnrolledStudents() {
+      // Get teacher info from localStorage
+      const userData = JSON.parse(localStorage.getItem('userData'));
+      const instructorId = userData && userData.email ? userData.email : 'unknown';
+      
+      // First get the teacher's courses
+      fetch(`http://localhost:3000/api/courses/instructor/${instructorId}`)
+        .then(response => response.json())
+        .then(courses => {
+          if (courses.length === 0) {
+            // No courses, so no students
+            const enrolledStudentsContainer = document.querySelector('#enrolled tbody');
+            enrolledStudentsContainer.innerHTML = `
+              <tr>
+                <td colspan="5" style="text-align: center; padding: 20px;">No courses created yet</td>
+              </tr>
+            `;
+            document.getElementById('studentCount').textContent = '0';
+            return;
+          }
+          
+          // Get enrollments for each course
+          const courseIds = courses.map(course => course._id);
+          const enrollmentPromises = courseIds.map(courseId => 
+            fetch(`http://localhost:3000/api/enrollments/course/${courseId}`)
+              .then(response => response.json())
+          );
+          
+          Promise.all(enrollmentPromises)
+            .then(enrollmentResults => {
+              // Flatten the enrollment arrays
+              const allEnrollments = enrollmentResults.flat();
+              
+              if (allEnrollments.length === 0) {
+                const enrolledStudentsContainer = document.querySelector('#enrolled tbody');
+                enrolledStudentsContainer.innerHTML = `
+                  <tr>
+                    <td colspan="5" style="text-align: center; padding: 20px;">No students enrolled in your courses yet</td>
+                  </tr>
+                `;
+                document.getElementById('studentCount').textContent = '0';
+                return;
+              }
+              
+              // Get unique student emails (studentId in enrollment is the email)
+              const studentEmails = [...new Set(allEnrollments.map(enrollment => enrollment.studentId))];
+              
+              // Fetch course details for mapping
+              const coursePromises = courseIds.map(courseId => 
+                fetch(`http://localhost:3000/api/courses/${courseId}`)
+                  .then(response => response.json())
+                  .catch(() => null)
+              );
+              
+              Promise.all(coursePromises)
+                .then(courseResults => {
+                  // Create a map of course ID to course name
+                  const courseMap = {};
+                  courseResults.forEach((course, index) => {
+                    if (course) {
+                      courseMap[courseIds[index]] = course.name || course.code || courseId.substring(0, 8);
+                    }
+                  });
+                  
+                  // Fetch student details by email
+                  const studentPromises = studentEmails.map(email => 
+                    fetch(`http://localhost:3000/api/students/email/${email}`)
+                      .then(response => {
+                        if (!response.ok) {
+                          // If student not found by email, create a minimal student object
+                          return { name: 'Unknown Student', email: email, studentId: email.substring(0, 8) };
+                        }
+                        return response.json();
+                      })
+                      .catch(() => ({ name: 'Unknown Student', email: email, studentId: email.substring(0, 8) }))
+                  );
+                  
+                  Promise.all(studentPromises)
+                    .then(studentResults => {
+                      // Create a map of student email to student details
+                      const studentMap = {};
+                      studentResults.forEach(student => {
+                        studentMap[student.email] = student;
+                      });
+                      
+                      const enrolledStudentsContainer = document.querySelector('#enrolled tbody');
+                      let studentRows = '';
+                      
+                      allEnrollments.forEach(enrollment => {
+                        const student = studentMap[enrollment.studentId] || { 
+                          name: 'Unknown Student', 
+                          email: enrollment.studentId,
+                          studentId: enrollment.studentId.substring(0, 8)
+                        };
+                        
+                        const courseName = courseMap[enrollment.courseId] || enrollment.courseId.substring(0, 8);
+                        
+                        studentRows += `
+                          <tr>
+                            <td>${student.studentId || student.email.substring(0, 8)}</td>
+                            <td>${student.name}</td>
+                            <td>${student.email}</td>
+                            <td>${courseName}</td>
+                            <td>${new Date(enrollment.enrolledAt).toLocaleDateString()}</td>
+                          </tr>
+                        `;
+                      });
+                      
+                      enrolledStudentsContainer.innerHTML = studentRows;
+                      document.getElementById('studentCount').textContent = allEnrollments.length;
+                    })
+                    .catch(error => {
+                      console.error('Error fetching student details:', error);
+                      const enrolledStudentsContainer = document.querySelector('#enrolled tbody');
+                      enrolledStudentsContainer.innerHTML = `
+                        <tr>
+                          <td colspan="5" style="text-align: center; padding: 20px;">Error loading student details. Please try again later.</td>
+                        </tr>
+                      `;
+                      document.getElementById('studentCount').textContent = '0';
+                    });
+                })
+                .catch(error => {
+                  console.error('Error fetching course details:', error);
+                  const enrolledStudentsContainer = document.querySelector('#enrolled tbody');
+                  enrolledStudentsContainer.innerHTML = `
+                    <tr>
+                      <td colspan="5" style="text-align: center; padding: 20px;">Error loading course details. Please try again later.</td>
+                    </tr>
+                  `;
+                  document.getElementById('studentCount').textContent = '0';
+                });
+            })
+            .catch(error => {
+              console.error('Error fetching enrollments:', error);
+              const enrolledStudentsContainer = document.querySelector('#enrolled tbody');
+              enrolledStudentsContainer.innerHTML = `
+                <tr>
+                  <td colspan="5" style="text-align: center; padding: 20px;">Error loading student enrollments. Please try again later.</td>
+                </tr>
+              `;
+              document.getElementById('studentCount').textContent = '0';
+            });
+        })
+        .catch(error => {
+          console.error('Error fetching courses:', error);
+          const enrolledStudentsContainer = document.querySelector('#enrolled tbody');
+          enrolledStudentsContainer.innerHTML = `
+            <tr>
+              <td colspan="5" style="text-align: center; padding: 20px;">Error loading your courses. Please try again later.</td>
+            </tr>
+          `;
+          document.getElementById('studentCount').textContent = '0';
+        });
+    }
+    
+    // Function to display uploaded materials
+    function displayUploadedMaterials() {
+      // Get teacher info from localStorage
+      const userData = JSON.parse(localStorage.getItem('userData'));
+      const instructorId = userData && userData.email ? userData.email : 'unknown';
+      
+      // First get the teacher's courses
+      fetch(`http://localhost:3000/api/courses/instructor/${instructorId}`)
+        .then(response => response.json())
+        .then(courses => {
+          if (courses.length === 0) {
+            // No courses, so no materials
+            const materialsContainer = document.querySelector('#materials tbody');
+            materialsContainer.innerHTML = `
+              <tr>
+                <td colspan="5" style="text-align: center; padding: 20px;">No materials uploaded yet</td>
+              </tr>
+            `;
+            return;
+          }
+          
+          // Get materials for each course
+          const courseIds = courses.map(course => course._id);
+          const materialPromises = courseIds.map(courseId => 
+            fetch(`http://localhost:3000/api/materials/course/${courseId}`)
+              .then(response => response.json())
+          );
+          
+          Promise.all(materialPromises)
+            .then(materialResults => {
+              // Flatten the material arrays
+              const allMaterials = materialResults.flat();
+              
+              const materialsContainer = document.querySelector('#materials tbody');
+              
+              if (allMaterials.length > 0) {
+                let materialRows = '';
+                allMaterials.forEach(material => {
+                  // Format material type for display
+                  let typeDisplay = material.type.charAt(0).toUpperCase() + material.type.slice(1);
+                  
+                  // Create action button based on material type
+                  let actionButton = '';
+                  if (material.type === 'video' && material.fileUrl) {
+                    actionButton = `<a href="${material.fileUrl}" target="_blank" class="material-link">Watch Video</a>`;
+                  } else if (material.fileUrl) {
+                    actionButton = `<a href="${material.fileUrl}" target="_blank" class="material-link">Download</a>`;
+                  } else {
+                    actionButton = `<span class="material-link">No file</span>`;
+                  }
+                  
+                  materialRows += `
+                    <tr>
+                      <td>${material.title}</td>
+                      <td>${material.courseId}</td>
+                      <td>${typeDisplay}</td>
+                      <td>${new Date(material.uploadedAt).toLocaleDateString()}</td>
+                      <td>${actionButton}</td>
+                    </tr>
+                  `;
+                });
+                materialsContainer.innerHTML = materialRows;
+              } else {
+                materialsContainer.innerHTML = `
+                  <tr>
+                    <td colspan="5" style="text-align: center; padding: 20px;">No materials uploaded yet</td>
+                  </tr>
+                `;
+              }
+            })
+            .catch(error => {
+              console.error('Error fetching materials:', error);
+              const materialsContainer = document.querySelector('#materials tbody');
+              materialsContainer.innerHTML = `
+                <tr>
+                  <td colspan="5" style="text-align: center; padding: 20px;">No materials uploaded yet</td>
+                </tr>
+              `;
+            });
+        })
+        .catch(error => {
+          console.error('Error fetching courses:', error);
+          const materialsContainer = document.querySelector('#materials tbody');
+          materialsContainer.innerHTML = `
+            <tr>
+              <td colspan="5" style="text-align: center; padding: 20px;">No materials uploaded yet</td>
+            </tr>
+          `;
+        });
+    }
+    
+    // Function to populate course dropdowns
+    function populateCourseDropdowns() {
+      // Get teacher info from localStorage
+      const userData = JSON.parse(localStorage.getItem('userData'));
+      const instructorId = userData && userData.email ? userData.email : 'unknown';
+      
+      // Fetch courses from backend
+      fetch(`http://localhost:3000/api/courses/instructor/${instructorId}`)
+        .then(response => response.json())
+        .then(courses => {
+          const courseDropdowns = document.querySelectorAll('select[id$="Course"]');
+          
+          courseDropdowns.forEach(dropdown => {
+            // Clear existing options except the first one
+            while (dropdown.options.length > 1) {
+              dropdown.remove(1);
+            }
+            
+            // Add courses to dropdown
+            courses.forEach(course => {
+              const option = document.createElement('option');
+              option.value = course._id;
+              option.textContent = course.name + ' (' + course.code + ')';
+              dropdown.appendChild(option);
+            });
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching courses:', error);
+        });
+    }
+    
+    // Function to display submissions for grading
+    function displaySubmissionsForGrading() {
+      // Get teacher info from localStorage
+      const userData = JSON.parse(localStorage.getItem('userData'));
+      const instructorId = userData && userData.email ? userData.email : 'unknown';
+      
+      // First get the teacher's courses
+      fetch(`http://localhost:3000/api/courses/instructor/${instructorId}`)
+        .then(response => response.json())
+        .then(courses => {
+          if (courses.length === 0) {
+            // No courses, so no submissions
+            const submissionsContainer = document.querySelector('#grading tbody');
+            submissionsContainer.innerHTML = `
+              <tr>
+                <td colspan="6" style="text-align: center; padding: 20px;">No courses created yet</td>
+              </tr>
+            `;
+            return;
+          }
+          
+          // Get course IDs
+          const courseIds = courses.map(course => course._id);
+          
+          // Get submissions for all courses
+          const submissionPromises = courseIds.map(courseId => 
+            fetch(`http://localhost:3000/api/submissions/assignment/course/${courseId}`)
+              .then(response => response.json())
+          );
+          
+          Promise.all(submissionPromises)
+            .then(submissionResults => {
+              // Flatten the submission arrays
+              const allSubmissions = submissionResults.flat();
+              
+              if (allSubmissions.length === 0) {
+                const submissionsContainer = document.querySelector('#grading tbody');
+                submissionsContainer.innerHTML = `
+                  <tr>
+                    <td colspan="6" style="text-align: center; padding: 20px;">No submissions to grade</td>
+                  </tr>
+                `;
+                return;
+              }
+              
+              // Get unique assignment IDs
+              const assignmentIds = [...new Set(allSubmissions.map(submission => submission.assignmentId))];
+              
+              // Get unique student IDs (emails)
+              const studentEmails = [...new Set(allSubmissions.map(submission => submission.studentId))];
+              
+              // Fetch assignments details
+              const assignmentPromises = assignmentIds.map(assignmentId => 
+                fetch(`http://localhost:3000/api/assignments/${assignmentId}`)
+                  .then(response => response.json())
+                  .catch(() => null)
+              );
+              
+              // Fetch student details
+              const studentPromises = studentEmails.map(email => 
+                fetch(`http://localhost:3000/api/students/email/${email}`)
+                  .then(response => response.json())
+                  .catch(() => ({ name: 'Unknown Student', email: email }))
+              );
+              
+              Promise.all([...assignmentPromises, ...studentPromises])
+                .then(results => {
+                  // Split results into assignments and students
+                  const assignments = results.slice(0, assignmentIds.length);
+                  const students = results.slice(assignmentIds.length);
+                  
+                  // Create maps for quick lookup
+                  const assignmentMap = {};
+                  assignments.forEach((assignment, index) => {
+                    if (assignment) {
+                      assignmentMap[assignmentIds[index]] = assignment;
+                    }
+                  });
+                  
+                  const studentMap = {};
+                  students.forEach((student, index) => {
+                    studentMap[studentEmails[index]] = student;
+                  });
+                  
+                  // Create course map
+                  const courseMap = {};
+                  courses.forEach(course => {
+                    courseMap[course._id] = course;
+                  });
+                  
+                  const submissionsContainer = document.querySelector('#grading tbody');
+                  let submissionRows = '';
+                  
+                  allSubmissions.forEach(submission => {
+                    const assignment = assignmentMap[submission.assignmentId];
+                    const student = studentMap[submission.studentId];
+                    const course = courseMap[submission.courseId];
+                    
+                    if (assignment && student && course) {
+                      const status = submission.graded ? 
+                        '<span class="assignment-status status-graded">Graded</span>' : 
+                        '<span class="assignment-status status-submitted">Submitted</span>';
+                      
+                      const grade = submission.graded ? `${submission.totalPoints}/${assignment.points}` : 'Not graded';
+                      
+                      const actionButton = submission.graded ? 
+                        `<button class="btn-secondary" onclick="viewGradedSubmission('${submission._id}')">View Grade</button>` :
+                        `<button class="btn-primary" onclick="gradeSubmission('${submission._id}')">Grade</button>`;
+                      
+                      submissionRows += `
+                        <tr>
+                          <td>${student.name}</td>
+                          <td>${assignment.title}</td>
+                          <td>${new Date(submission.submittedAt).toLocaleDateString()}</td>
+                          <td>${status}</td>
+                          <td>${grade}</td>
+                          <td>${actionButton}</td>
+                        </tr>
+                      `;
+                    }
+                  });
+                  
+                  submissionsContainer.innerHTML = submissionRows;
+                })
+                .catch(error => {
+                  console.error('Error fetching assignment/student details:', error);
+                  const submissionsContainer = document.querySelector('#grading tbody');
+                  submissionsContainer.innerHTML = `
+                    <tr>
+                      <td colspan="6" style="text-align: center; padding: 20px;">Error loading submission details. Please try again later.</td>
+                    </tr>
+                  `;
+                });
+            })
+            .catch(error => {
+              console.error('Error fetching submissions:', error);
+              const submissionsContainer = document.querySelector('#grading tbody');
+              submissionsContainer.innerHTML = `
+                <tr>
+                  <td colspan="6" style="text-align: center; padding: 20px;">Error loading submissions. Please try again later.</td>
+                </tr>
+              `;
+            });
+        })
+        .catch(error => {
+          console.error('Error fetching courses:', error);
+          const submissionsContainer = document.querySelector('#grading tbody');
+          submissionsContainer.innerHTML = `
+            <tr>
+              <td colspan="6" style="text-align: center; padding: 20px;">Error loading your courses. Please try again later.</td>
+            </tr>
+          `;
+        });
+    }
+    
+    // Function to grade a submission
+    function gradeSubmission(submissionId) {
+      // Fetch submission details
+      fetch(`http://localhost:3000/api/submissions/${submissionId}`)
+        .then(response => response.json())
+        .then(submission => {
+          // Fetch assignment details
+          return fetch(`http://localhost:3000/api/assignments/${submission.assignmentId}`)
+            .then(response => response.json())
+            .then(assignment => {
+              // Fetch student details
+              return fetch(`http://localhost:3000/api/students/email/${submission.studentId}`)
+                .then(response => response.json())
+                .then(student => {
+                  // Create grading modal
+                  const modal = document.createElement('div');
+                  modal.style.position = 'fixed';
+                  modal.style.top = '0';
+                  modal.style.left = '0';
+                  modal.style.width = '100%';
+                  modal.style.height = '100%';
+                  modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+                  modal.style.display = 'flex';
+                  modal.style.justifyContent = 'center';
+                  modal.style.alignItems = 'center';
+                  modal.style.zIndex = '1000';
+                  
+                  // Create questions HTML with student answers
+                  let questionsHTML = '';
+                  if (assignment.questions && assignment.questions.length > 0) {
+                    questionsHTML = '<h3>Questions & Answers:</h3>';
+                    assignment.questions.forEach((question, index) => {
+                      // Find student's answer for this question
+                      const studentAnswer = submission.answers.find(answer => answer.questionId == index);
+                      const answerText = studentAnswer ? studentAnswer.answerText : 'No answer provided';
+                      
+                      questionsHTML += `
+                        <div style="margin-bottom: 20px; padding: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 10px;">
+                          <p><strong>Question ${index + 1} (${question.points} points):</strong> ${question.questionText}</p>
+                          <p><strong>Student's Answer:</strong> ${answerText}</p>
+                          <div style="margin-top: 10px;">
+                            <label>Points Awarded: 
+                              <input type="number" id="points-${index}" min="0" max="${question.points}" value="0" 
+                                style="width: 80px; padding: 5px; border-radius: 5px; background: rgba(0, 0, 0, 0.3); color: white; border: 1px solid #444;">
+                            </label>
+                          </div>
+                        </div>
+                      `;
+                    });
+                  }
+                  
+                  modal.innerHTML = `
+                    <div style="background: #1e293b; color: #f8fafc; padding: 30px; border-radius: 15px; max-width: 800px; width: 90%; max-height: 90vh; overflow-y: auto;">
+                      <h2>Grade Assignment: ${assignment.title}</h2>
+                      <p><strong>Student:</strong> ${student.name}</p>
+                      <p><strong>Total Points Possible:</strong> ${assignment.points}</p>
+                      
+                      ${questionsHTML}
+                      
+                      <div style="margin-top: 20px;">
+                        <label>Total Points: 
+                          <input type="number" id="totalPoints" min="0" max="${assignment.points}" value="0" 
+                            style="width: 80px; padding: 5px; border-radius: 5px; background: rgba(0, 0, 0, 0.3); color: white; border: 1px solid #444;">
+                        </label>
+                      </div>
+                      
+                      <div style="margin-top: 20px; display: flex; justify-content: space-between;">
+                        <button onclick="this.closest('div').parentElement.remove()" 
+                          style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+                          Cancel
+                        </button>
+                        <button onclick="saveGrade('${submissionId}')" 
+                          style="background: #36d1dc; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+                          Save Grade
+                        </button>
+                      </div>
+                    </div>
+                  `;
+                  
+                  document.body.appendChild(modal);
+                });
+            });
+        })
+        .catch(error => {
+          console.error('Error fetching submission details:', error);
+          alert('Error loading submission details. Please try again later.');
+        });
+    }
+    
+    // Function to save the grade
+    function saveGrade(submissionId) {
+      // Get teacher info from localStorage
+      const userData = JSON.parse(localStorage.getItem('userData'));
+      const gradedBy = userData && userData.fullName ? userData.fullName : 'Unknown Teacher';
+      
+      // Get total points
+      const totalPoints = parseInt(document.getElementById('totalPoints').value) || 0;
+      
+      // Create grade data
+      const gradeData = {
+        totalPoints: totalPoints,
+        graded: true,
+        gradedBy: gradedBy
+      };
+      
+      // Send to backend
+      fetch(`http://localhost:3000/api/submissions/${submissionId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(gradeData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Grade saved:', data);
+        alert('Grade saved successfully!');
+        
+        // Close modal
+        const modal = document.querySelector('div[style*="position: fixed"]');
+        if (modal) {
+          modal.remove();
+        }
+        
+        // Refresh the grading display
+        displaySubmissionsForGrading();
+      })
+      .catch(error => {
+        console.error('Error saving grade:', error);
+        alert('Error saving grade. Please try again later.');
+      });
+    }
+    
+    // Function to view a graded submission
+    function viewGradedSubmission(submissionId) {
+      // Fetch submission details
+      fetch(`http://localhost:3000/api/submissions/${submissionId}`)
+        .then(response => response.json())
+        .then(submission => {
+          // Fetch assignment details
+          return fetch(`http://localhost:3000/api/assignments/${submission.assignmentId}`)
+            .then(response => response.json())
+            .then(assignment => {
+              // Fetch student details
+              return fetch(`http://localhost:3000/api/students/email/${submission.studentId}`)
+                .then(response => response.json())
+                .then(student => {
+                  // Create view modal
+                  const modal = document.createElement('div');
+                  modal.style.position = 'fixed';
+                  modal.style.top = '0';
+                  modal.style.left = '0';
+                  modal.style.width = '100%';
+                  modal.style.height = '100%';
+                  modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+                  modal.style.display = 'flex';
+                  modal.style.justifyContent = 'center';
+                  modal.style.alignItems = 'center';
+                  modal.style.zIndex = '1000';
+                  
+                  // Create questions HTML with student answers
+                  let questionsHTML = '';
+                  if (assignment.questions && assignment.questions.length > 0) {
+                    questionsHTML = '<h3>Questions & Answers:</h3>';
+                    assignment.questions.forEach((question, index) => {
+                      // Find student's answer for this question
+                      const studentAnswer = submission.answers.find(answer => answer.questionId == index);
+                      const answerText = studentAnswer ? studentAnswer.answerText : 'No answer provided';
+                      
+                      questionsHTML += `
+                        <div style="margin-bottom: 20px; padding: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 10px;">
+                          <p><strong>Question ${index + 1} (${question.points} points):</strong> ${question.questionText}</p>
+                          <p><strong>Student's Answer:</strong> ${answerText}</p>
+                        </div>
+                      `;
+                    });
+                  }
+                  
+                  modal.innerHTML = `
+                    <div style="background: #1e293b; color: #f8fafc; padding: 30px; border-radius: 15px; max-width: 800px; width: 90%; max-height: 90vh; overflow-y: auto;">
+                      <h2>Graded Assignment: ${assignment.title}</h2>
+                      <p><strong>Student:</strong> ${student.name}</p>
+                      <p><strong>Total Points:</strong> ${submission.totalPoints}/${assignment.points}</p>
+                      <p><strong>Graded By:</strong> ${submission.gradedBy}</p>
+                      <p><strong>Graded On:</strong> ${new Date(submission.gradedAt).toLocaleDateString()}</p>
+                      
+                      ${questionsHTML}
+                      
+                      <div style="margin-top: 20px; display: flex; justify-content: space-between;">
+                        <button onclick="this.closest('div').parentElement.remove()" 
+                          style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+                          Close
+                        </button>
+                      </div>
+                    </div>
+                  `;
+                  
+                  document.body.appendChild(modal);
+                });
+            });
+        })
+        .catch(error => {
+          console.error('Error fetching submission details:', error);
+          alert('Error loading submission details. Please try again later.');
+        });
+    }
+    
+    // Check if user is logged in when page loads
+    window.onload = function() {
+      if (localStorage.getItem('isLoggedIn') !== 'true') {
+        window.location.href = 'login.html';
+      } else {
+        // Get user data and display teacher name
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        if (userData && userData.fullName) {
+          document.getElementById('teacherName').textContent = 'Welcome, ' + userData.fullName;
+        }
+        
+        // Initialize dashboard with dynamic data
+        updateDashboardCounts();
+        populateCourseDropdowns();
+      }
+    };
+  </script>
+</body>
+</html>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register | SmartLearn LMS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Primary Colors */
+      --primary-gradient-start: #4e54c8;
+      --primary-gradient-end: #8f94fb;
+      --secondary-gradient-start: #11998e;
+      --secondary-gradient-end: #38ef7d;
+      --accent-gradient-start: #ff416c;
+      --accent-gradient-end: #ff4b2b;
+      
+      /* Background Colors */
+      --bg-dark: #0f172a;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --bg-overlay: rgba(15, 23, 42, 0.85);
+      
+      /* Text Colors */
+      --text-light: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-accent: #e2e8f0;
+      
+      /* Border Colors */
+      --border-light: rgba(255, 255, 255, 0.1);
+      --border-accent: rgba(147, 197, 253, 0.3);
+      
+      /* Shadows */
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, var(--bg-dark), #1e293b);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-attachment: fixed;
+    }
+    
+    .register-container {
+      background: var(--bg-card);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-light);
+    }
+    
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .logo h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(90deg, var(--accent-gradient-start), var(--accent-gradient-end));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .logo p {
+      color: var(--text-secondary);
+      margin-top: 10px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 15px;
+      border-radius: 10px;
+      border: 2px solid var(--border-light);
+      background: rgba(0, 0, 0, 0.3);
+      color: var(--text-light);
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--accent-gradient-end);
+      box-shadow: 0 0 0 3px rgba(255, 75, 43, 0.3);
+    }
+    
+    .form-group select {
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 1em;
+    }
+    
+    .btn {
+      width: 100%;
+      padding: 15px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(90deg, var(--accent-gradient-start), var(--accent-gradient-end));
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+    
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .links {
+      text-align: center;
+      margin-top: 25px;
+      color: var(--text-secondary);
+    }
+    
+    .links a {
+      color: var(--accent-gradient-end);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    .links a:hover {
+      text-decoration: underline;
+    }
+    
+    .message {
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 10px;
+      display: none;
+      text-align: center;
+    }
+    
+    .success {
+      background-color: rgba(40, 167, 69, 0.2);
+      border: 1px solid #28a745;
+      color: #28a745;
+    }
+    
+    .error {
+      background-color: rgba(220, 53, 69, 0.2);
+      border: 1px solid #dc3545;
+      color: #dc3545;
+    }
+    
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+    
+    .back-link:hover {
+      color: var(--accent-gradient-end);
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <div class="logo">
+      <h1>SmartLearn</h1>
+      <p>Create your account to get started</p>
+    </div>
+    
+    <form id="registerForm">
+      <div id="message" class="message"></div>
+      
+      <div class="form-group">
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" placeholder="Enter your full name" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="Enter your email" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Create a password" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="role">Select Role</label>
+        <select id="role" required>
+          <option value="">Choose your role</option>
+          <option value="student">Student</option>
+          <option value="teacher">Teacher</option>
+        </select>
+      </div>
+      
+      <button type="submit" class="btn">Create Account</button>
+    </form>
+    
+    <div class="links">
+      <p>Already have an account? <a href="login.html">Login here</a></p>
+      <a href="index.html" class="back-link">← Back to Home</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Get form values
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const role = document.getElementById('role').value;
+      
+      // Full name validation
+      if (!fullName) {
+        showMessage('Please enter your full name', 'error');
+        return;
+      }
+      
+      // Email validation
+      if (!email) {
+        showMessage('Please enter your email address', 'error');
+        return;
+      }
+      
+      // Basic email format validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showMessage('Please enter a valid email address', 'error');
+        return;
+      }
+      
+      // Password validation
+      if (!password) {
+        showMessage('Please create a password', 'error');
+        return;
+      }
+      
+      // Password length validation (must be at least 6 characters)
+      if (password.length < 6) {
+        showMessage('Password must be at least 6 characters long', 'error');
+        return;
+      }
+      
+      // Role validation
+      if (!role) {
+        showMessage('Please select your role', 'error');
+        return;
+      }
+      
+      // Create user data based on role
+      if (role === 'student') {
+        // Create student data
+        const studentData = {
+          name: fullName,
+          email: email,
+          studentId: 'STU' + Math.floor(1000 + Math.random() * 9000), // Generate a student ID
+          grade: 'Not specified'
+        };
+        
+        // Send to backend
+        fetch('http://localhost:3000/api/students', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(studentData)
+        })
+        .then(response => {
+          if (!response.ok) {
+            return response.json().then(data => {
+              throw new Error(data.message || 'Registration failed');
+            });
+          }
+          return response.json();
+        })
+        .then(data => {
+          // Store user data in localStorage
+          const userData = {
+            fullName: fullName,
+            email: email,
+            role: role,
+            registered: true
+          };
+          
+          localStorage.setItem('userData', JSON.stringify(userData));
+          localStorage.setItem('isLoggedIn', 'true');
+          
+          // Show success message
+          showMessage('Registration successful! Redirecting...', 'success');
+          
+          // Redirect to student dashboard after a short delay
+          setTimeout(function() {
+            window.location.href = 'student.html';
+          }, 1500);
+        })
+        .catch(error => {
+          console.error('Error registering student:', error);
+          showMessage('Error: ' + error.message, 'error');
+        });
+      } else if (role === 'teacher') {
+        // For teachers, we'll just store the data in localStorage for now
+        // In a real application, you would create a teacher model in the backend
+        const userData = {
+          fullName: fullName,
+          email: email,
+          role: role,
+          registered: true
+        };
+        
+        localStorage.setItem('userData', JSON.stringify(userData));
+        localStorage.setItem('isLoggedIn', 'true');
+        
+        // Show success message
+        showMessage('Registration successful! Redirecting...', 'success');
+        
+        // Redirect to teacher dashboard after a short delay
+        setTimeout(function() {
+          window.location.href = 'teacher.html';
+        }, 1500);
+      }
+    });
+    
+    function showMessage(text, type) {
+      const messageDiv = document.getElementById('message');
+      messageDiv.textContent = text;
+      messageDiv.className = 'message ' + type;
+      messageDiv.style.display = 'block';
+      
+      // Hide message after 5 seconds
+      setTimeout(function() {
+        messageDiv.style.display = 'none';
+      }, 5000);
+    }
+  </script>
+</body>
+</html>
